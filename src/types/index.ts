@@ -1,69 +1,49 @@
-/**
- * Represents a single validation error associated with a specific field.
- */
 export interface FieldError {
-  field: string; // The property name with the error (e.g., "priorityLevel")
-  message: string; // The validation error message
+  field: string;
+  message: string;
 }
 
-/**
- * The core Client entity, including a property to hold validation errors.
- */
 export interface Client {
-  id: string; // Unique ClientID
+  id: string;
   name: string;
   priorityLevel: number;
   requestedTaskIds: string[];
   groupTag: string;
   attributes: Record<string, unknown> | string;
-  errors?: FieldError[]; // An array of validation errors for this client
+  errors?: FieldError[];
 }
 
-/**
- * The core Worker entity.
- */
 export interface Worker {
-  id: string; // Unique WorkerID
+  id: string;
   name: string;
   skills: string[];
   availableSlots: number[];
   maxLoadPerPhase: number;
   workerGroup: string;
   qualificationLevel: number;
-  errors?: FieldError[]; // An array of validation errors for this worker
+  errors?: FieldError[];
 }
 
-/**
- * The core Task entity.
- */
 export interface Task {
-  id: string; // Unique TaskID
+  id: string;
   name: string;
   category: string;
   duration: number;
   requiredSkills: string[];
   preferredPhases: number[];
   maxConcurrent: number;
-  errors?: FieldError[]; // An array of validation errors for this task
+  errors?: FieldError[];
 }
 
-/**
- * A union type to represent any of the data entities we handle.
- */
 export type DataEntity = Client | Worker | Task;
-
-// --- Rule & Priority Types ---
 
 export interface CoRunRule {
   type: 'coRun';
-  tasks: string[]; // An array of TaskIDs that must run together
+  tasks: string[];
 }
 
 export type BusinessRule = CoRunRule;
 
-/**
- * NEW: Defines the structure for the prioritization settings from the sliders.
- */
 export interface PrioritySettings {
   fulfillHighestPriority: number;
   taskCompletion: number;

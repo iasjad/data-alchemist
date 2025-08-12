@@ -14,22 +14,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'; // We will add this component next
+} from '@/components/ui/table';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  meta?: any; 
 }
 
 export function DataGrid<TData, TValue>({
   columns,
   data,
+  meta,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    // We'll add more options here later (e.g., for editing)
+    meta,
   });
 
   return (

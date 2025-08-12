@@ -1,6 +1,5 @@
 'use client';
-
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDataStore } from '@/store/useDataStore';
 import { DataGrid } from '@/components/features/DataGrid/DataGrid';
 import { getClientColumns } from '@/components/features/DataGrid/clientColumns';
@@ -12,13 +11,45 @@ import { SearchBar } from '@/components/features/NaturalLanguageSearch/SearchBar
 import { RuleBuilder } from '@/components/features/RuleBuilder/RuleBuilder';
 import { Prioritization } from '@/components/features/Prioritization/Prioritization';
 import { Export } from '@/components/features/Export/Export';
-import { DataIngestionController } from '@/components/features/DataIngestion/DataIngestionController'; // <-- Import the new controller
+import { DataIngestionController } from '@/components/features/DataIngestion/DataIngestionController';
+import { Client, Task, Worker } from '@/types'; // <-- Added missing 'Worker' import
 
 function DataTablesDisplay() {
-  const { clients, workers, tasks } = useDataStore();
+  const { clients, workers, tasks, updateAndValidateData } = useDataStore();
+
   const clientColumns = getClientColumns();
   const workerColumns = getWorkerColumns();
   const taskColumns = getTaskColumns();
+
+  const updateClient = useCallback(
+    (id: string, field: keyof Client, value: any) => {
+      const updated = clients.map((c) =>
+        c.id === id ? { ...c, [field]: value } : c
+      );
+      updateAndValidateData({ clients: updated });
+    },
+    [clients, updateAndValidateData]
+  );
+
+  const updateWorker = useCallback(
+    (id: string, field: keyof Worker, value: any) => {
+      const updated = workers.map((w) =>
+        w.id === id ? { ...w, [field]: value } : w
+      );
+      updateAndValidateData({ workers: updated });
+    },
+    [workers, updateAndValidateData]
+  );
+
+  const updateTask = useCallback(
+    (id: string, field: keyof Task, value: any) => {
+      const updated = tasks.map((t) =>
+        t.id === id ? { ...t, [field]: value } : t
+      );
+      updateAndValidateData({ tasks: updated });
+    },
+    [tasks, updateAndValidateData]
+  );
 
   const hasLoadedData =
     clients.length > 0 || workers.length > 0 || tasks.length > 0;
@@ -41,7 +72,11 @@ function DataTablesDisplay() {
               <CardTitle>Clients Data</CardTitle>
             </CardHeader>
             <CardContent>
-              <DataGrid columns={clientColumns} data={clients} />
+              <DataGrid
+                columns={clientColumns}
+                data={clients}
+                meta={{ updateData: updateClient }}
+              />
             </CardContent>
           </Card>
         )}
@@ -51,7 +86,11 @@ function DataTablesDisplay() {
               <CardTitle>Workers Data</CardTitle>
             </CardHeader>
             <CardContent>
-              <DataGrid columns={workerColumns} data={workers} />
+              <DataGrid
+                columns={workerColumns}
+                data={workers}
+                meta={{ updateData: updateWorker }}
+              />
             </CardContent>
           </Card>
         )}
@@ -61,7 +100,11 @@ function DataTablesDisplay() {
               <CardTitle>Tasks Data</CardTitle>
             </CardHeader>
             <CardContent>
-              <DataGrid columns={taskColumns} data={tasks} />
+              <DataGrid
+                columns={taskColumns}
+                data={tasks}
+                meta={{ updateData: updateTask }}
+              />
             </CardContent>
           </Card>
         )}
@@ -73,7 +116,6 @@ function DataTablesDisplay() {
 export default function Home() {
   const { clients, workers, tasks } = useDataStore();
   const hasData = clients.length > 0 || workers.length > 0 || tasks.length > 0;
-  const FullData = clients.length > 0 && workers.length > 0 && tasks.length > 0;
 
   return (
     <main className="flex min-h-screen flex-col items-center p-6 md:p-12">
@@ -83,7 +125,9 @@ export default function Home() {
         </h1>
       </div>
 
-      <div className="w-full">{!FullData && <DataIngestionController />}</div>
+      <div className="w-full">
+        <DataIngestionController />
+      </div>
 
       {hasData && (
         <>

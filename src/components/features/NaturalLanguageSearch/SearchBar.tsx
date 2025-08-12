@@ -3,12 +3,12 @@
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { useDataStore } from '@/store/useDataStore'; // We'll add filtering logic to the store next
+import { useDataStore } from '@/store/useDataStore'; 
 
 export function SearchBar() {
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { applyFilters } = useDataStore(); // This function will apply the AI-generated filter
+  const { applyFilters } = useDataStore(); 
 
   const handleSearch = async () => {
     if (!query) return;
@@ -22,7 +22,6 @@ export function SearchBar() {
       const filterConfig = await response.json();
 
       if (filterConfig.error) {
-        // Handle error from AI (e.g., show a toast notification)
         console.error(filterConfig.error);
       } else {
         applyFilters(filterConfig);

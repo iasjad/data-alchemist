@@ -4,7 +4,7 @@ import React from 'react';
 import { useDataStore } from '@/store/useDataStore';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react'; // Icon for delete button
+import { X } from 'lucide-react'; 
 
 export function RuleList() {
   const { rules, removeRule } = useDataStore();

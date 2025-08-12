@@ -5,11 +5,6 @@ import { useDataStore } from '@/store/useDataStore';
 import { Button } from '@/components/ui/button';
 import { Download } from 'lucide-react';
 
-/**
- * NEW, ROBUST CSV CONVERTER
- * This function correctly handles complex data (arrays, objects) and
- * special characters by properly quoting and escaping them.
- */
 function toCSV(data: Record<string, unknown>[]): string {
   if (data.length === 0) return '';
 
@@ -17,24 +12,20 @@ function toCSV(data: Record<string, unknown>[]): string {
 
   const formatCell = (value: unknown): string => {
     if (value == null) {
-      // Handles null and undefined
       return '';
     }
 
-    // For arrays and objects, use JSON.stringify to get a string representation
     if (typeof value === 'object') {
       value = JSON.stringify(value);
     }
 
     const stringValue = String(value);
 
-    // If the string contains a comma, a double quote, or a newline, it needs to be enclosed in double quotes
     if (
       stringValue.includes(',') ||
       stringValue.includes('"') ||
       stringValue.includes('\n')
     ) {
-      // Escape any existing double quotes by replacing them with two double quotes ("")
       const escapedValue = stringValue.replace(/"/g, '""');
       return `"${escapedValue}"`;
     }
@@ -43,7 +34,7 @@ function toCSV(data: Record<string, unknown>[]): string {
   };
 
   const csvRows = [
-    headers.join(','), // The header row
+    headers.join(','),
     ...data.map((row) =>
       headers.map((header) => formatCell(row[header])).join(',')
     ),
@@ -52,7 +43,6 @@ function toCSV(data: Record<string, unknown>[]): string {
   return csvRows.join('\n');
 }
 
-// Helper function to trigger a file download in the browser (no changes needed here)
 function downloadFile(content: string, fileName: string, mimeType: string) {
   const blob = new Blob([content], { type: mimeType });
   const url = URL.createObjectURL(blob);
@@ -69,7 +59,6 @@ export function Export() {
   const { clients, workers, tasks, rules, priorities } = useDataStore();
 
   const handleExport = () => {
-    // Prepare cleaned data by removing the internal 'errors' property
     const cleanedClients = clients.map(({ errors, ...rest }) => rest);
     const cleanedWorkers = workers.map(({ errors, ...rest }) => rest);
     const cleanedTasks = tasks.map(({ errors, ...rest }) => rest);
@@ -80,7 +69,6 @@ export function Export() {
     };
     const rulesJsonString = JSON.stringify(rulesConfig, null, 2);
 
-    // Generate and download files using the new, robust toCSV function
     if (cleanedClients.length > 0)
       downloadFile(
         toCSV(cleanedClients),

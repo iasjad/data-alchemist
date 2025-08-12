@@ -2,8 +2,7 @@
 
 import React, { useCallback } from 'react';
 import { useDataStore } from '@/store/useDataStore';
-import { parseWorkbook, parseSingleFile, transformRow } from '@/lib/parser'; // Import new functions
-import { validateAllData } from '@/lib/validator';
+import { parseWorkbook, parseSingleFile, transformRow } from '@/lib/parser'; 
 import { SingleFileUploader } from './SingleFileUploader';
 import { Client, Task, Worker } from '@/types';
 
@@ -45,7 +44,6 @@ export function DataIngestionController() {
 
   return (
     <div className="w-full max-w-6xl mx-auto space-y-10">
-      {/* Section for Individual File Uploads */}
       <div>
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold tracking-tight">
@@ -77,7 +75,6 @@ export function DataIngestionController() {
         </div>
       </div>
 
-      {/* OR Separator */}
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
@@ -87,7 +84,6 @@ export function DataIngestionController() {
         </div>
       </div>
 
-      {/* Section for All-in-One Upload */}
       <div>
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold tracking-tight">

@@ -1,10 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// In a real app, this would be in a .env file
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'YOUR_API_KEY_HERE';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
 
-// The system prompt that instructs the AI
 const getSystemPrompt = () => `
 You are an expert data filtering assistant. Your task is to convert a user's natural language query into a structured JSON filter object.
 
@@ -47,7 +45,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Query is required' }, { status: 400 });
     }
 
-    // This is a basic example using the Gemini API
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -65,10 +62,8 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    // The response is nested, we need to extract the text and parse it
     const rawText = data.candidates[0].content.parts[0].text;
 
-    // Find the first '{' and the last '}' to extract the actual JSON string
     const startIndex = rawText.indexOf('{');
     const endIndex = rawText.lastIndexOf('}');
 
@@ -77,14 +72,12 @@ export async function POST(req: NextRequest) {
     }
 
     const jsonText = rawText.substring(startIndex, endIndex + 1);
-    // --- END: THE FIX ---
 
-    const filterObject = JSON.parse(jsonText); // This will now parse correctly
+    const filterObject = JSON.parse(jsonText); 
 
     return NextResponse.json(filterObject);
   } catch (error) {
     console.error('Error in search API:', error);
-    // Provide a more specific error message to the frontend if possible
     const errorMessage =
       error instanceof Error ? error.message : 'An unknown error occurred.';
     return NextResponse.json(

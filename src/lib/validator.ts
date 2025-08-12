@@ -1,6 +1,5 @@
 import { Client, Worker, Task, FieldError } from '@/types';
 
-// Helper to find duplicates in an array
 const findDuplicates = (arr: string[]): string[] => {
   const seen = new Set<string>();
   const duplicates = new Set<string>();
@@ -14,15 +13,11 @@ const findDuplicates = (arr: string[]): string[] => {
   return Array.from(duplicates);
 };
 
-/**
- * Main validation function that orchestrates all checks.
- */
 export const validateAllData = (
   clients: Client[],
   workers: Worker[],
   tasks: Task[]
 ) => {
-  // --- Pre-computation for efficient lookups ---
   const clientIds = clients.map((c) => c.id);
   const workerIds = workers.map((w) => w.id);
   const taskIds = tasks.map((t) => t.id);
@@ -34,7 +29,6 @@ export const validateAllData = (
   const taskIdSet = new Set(taskIds);
   const allWorkerSkills = new Set(workers.flatMap((w) => w.skills));
 
-  // --- Run validations ---
   const validatedClients = clients.map((client) =>
     validateClient(client, taskIdSet, duplicateClientIds)
   );
@@ -52,7 +46,6 @@ export const validateAllData = (
   };
 };
 
-// --- Individual Entity Validators ---
 
 function validateClient(
   client: Client,
@@ -61,7 +54,6 @@ function validateClient(
 ): Client {
   const errors: FieldError[] = [];
 
-  // Core Rule: Duplicate ClientID
   if (duplicateIds.includes(client.id)) {
     errors.push({
       field: 'id',
@@ -69,7 +61,6 @@ function validateClient(
     });
   }
 
-  // Core Rule: PriorityLevel out of range (1-5)
   if (client.priorityLevel < 1 || client.priorityLevel > 5) {
     errors.push({
       field: 'priorityLevel',
@@ -77,7 +68,6 @@ function validateClient(
     });
   }
 
-  // Core Rule: Unknown references in RequestedTaskIDs
   const unknownTasks = client.requestedTaskIds.filter((id) => !taskIds.has(id));
   if (unknownTasks.length > 0) {
     errors.push({
@@ -86,7 +76,6 @@ function validateClient(
     });
   }
 
-  // Core Rule: Broken JSON in AttributesJSON
   if (
     typeof client.attributes === 'string' &&
     client.attributes.trim().startsWith('{')
@@ -107,7 +96,6 @@ function validateClient(
 function validateWorker(worker: Worker, duplicateIds: string[]): Worker {
   const errors: FieldError[] = [];
 
-  // Core Rule: Duplicate WorkerID
   if (duplicateIds.includes(worker.id)) {
     errors.push({
       field: 'id',
@@ -115,7 +103,6 @@ function validateWorker(worker: Worker, duplicateIds: string[]): Worker {
     });
   }
 
-  // Core Rule: Malformed lists (non-numeric in AvailableSlots)
   if (
     worker.availableSlots.some(
       (slot) => typeof slot !== 'number' || isNaN(slot)
@@ -127,7 +114,6 @@ function validateWorker(worker: Worker, duplicateIds: string[]): Worker {
     });
   }
 
-  // Core Rule: Overloaded workers
   if (worker.availableSlots.length < worker.maxLoadPerPhase) {
     errors.push({
       field: 'maxLoadPerPhase',
@@ -146,12 +132,10 @@ function validateTask(
 ): Task {
   const errors: FieldError[] = [];
 
-  // Core Rule: Duplicate TaskID
   if (duplicateIds.includes(task.id)) {
     errors.push({ field: 'id', message: `Duplicate TaskID found: ${task.id}` });
   }
 
-  // Core Rule: Out-of-range values (Duration < 1)
   if (task.duration < 1) {
     errors.push({
       field: 'duration',
@@ -159,7 +143,6 @@ function validateTask(
     });
   }
 
-  // Core Rule: Skill-coverage matrix
   const unstaffableSkills = task.requiredSkills.filter(
     (skill) => !allWorkerSkills.has(skill)
   );

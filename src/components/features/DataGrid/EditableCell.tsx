@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea'; // ✅ Import Textarea
+import { Textarea } from '@/components/ui/textarea';
 import {
   Tooltip,
   TooltipContent,
@@ -15,14 +15,14 @@ interface EditableCellProps {
   initialValue: string | number;
   onSave: (value: string | number) => void;
   error?: string;
-  isTextArea?: boolean; // ✅ new prop
+  isTextArea?: boolean;
 }
 
 export const EditableCell: React.FC<EditableCellProps> = ({
   initialValue,
   onSave,
   error,
-  isTextArea = false, // ✅ default false
+  isTextArea = false,
 }) => {
   const [value, setValue] = useState(initialValue);
 

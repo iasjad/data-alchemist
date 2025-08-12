@@ -1,7 +1,6 @@
 import * as XLSX from 'xlsx';
 import { Client, Worker, Task } from '@/types';
 
-// This helper function remains the same.
 function parsePhases(input: unknown): number[] {
   const strInput = String(input).trim();
   if (strInput.startsWith('[') && strInput.endsWith(']')) {
@@ -25,7 +24,6 @@ function parsePhases(input: unknown): number[] {
   return [];
 }
 
-// This helper function remains the same.
 const getDataTypeFromSheetName = (
   name: string
 ): 'clients' | 'workers' | 'tasks' | null => {
@@ -36,12 +34,10 @@ const getDataTypeFromSheetName = (
   return null;
 };
 
-// This helper function is now more type-safe.
 export function transformRow(
   row: Record<string, unknown>,
   dataType: 'clients' | 'workers' | 'tasks'
 ): Partial<Client | Worker | Task> {
-  // Use a Partial type for better type safety instead of 'any'
   const transformed: Partial<Client & Worker & Task> = {};
 
   transformed.id = String(
@@ -75,7 +71,6 @@ export function transformRow(
     if (row.GroupTag) transformed.groupTag = String(row.GroupTag);
     if (row.AttributesJSON) {
       try {
-        // FIX: Ensure the value passed to JSON.parse is a string.
         transformed.attributes = JSON.parse(String(row.AttributesJSON));
       } catch {
         transformed.attributes = String(row.AttributesJSON);
@@ -122,7 +117,6 @@ export function parseSingleFile(
         if (!firstSheetName)
           return reject(new Error('No sheets found in file.'));
         const worksheet = workbook.Sheets[firstSheetName];
-        // FIX: Assert the type of the parsed JSON data.
         const jsonData = XLSX.utils.sheet_to_json(worksheet) as Record<
           string,
           unknown
@@ -155,7 +149,6 @@ export function parseWorkbook(
           const dataType = getDataTypeFromSheetName(sheetName);
           if (!dataType) return;
           const worksheet = workbook.Sheets[sheetName];
-          // FIX: Assert the type here as well. This fixes the error in the .map() call.
           const jsonData = XLSX.utils.sheet_to_json(worksheet) as Record<
             string,
             unknown

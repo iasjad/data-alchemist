@@ -2,17 +2,15 @@ import { create } from 'zustand';
 import { Client, Worker, Task, BusinessRule, PrioritySettings } from '@/types';
 import { validateAllData } from '@/lib/validator';
 
-// The FilterConfig interface remains the same
 interface FilterConfig {
   entity: 'clients' | 'workers' | 'tasks';
   filters: {
     field: string;
     operator: 'equals' | 'contains' | 'greater_than' | 'less_than';
-    value: string | number; // Corrected from 'any' for better type safety
+    value: string | number; 
   }[];
 }
 
-// The DataStoreState interface is updated to remove the old setters
 interface DataStoreState {
   originalClients: Client[];
   originalWorkers: Worker[];
@@ -33,17 +31,13 @@ interface DataStoreState {
   setPriorities: (newPriorities: Partial<PrioritySettings>) => void;
 }
 
-/**
- * UPDATED: The filtering utility is now a generic function.
- * This preserves the type information of the array being filtered.
- */
+
 function applyFilterLogic<T extends Client | Worker | Task>(
   data: T[],
   config: FilterConfig
 ): T[] {
   return data.filter((item) => {
     return config.filters.every((filter) => {
-      // Use a type assertion here for dynamic property access
       const itemValue = (item as Record<string, any>)[filter.field];
       switch (filter.operator) {
         case 'equals':
@@ -95,7 +89,6 @@ export const useDataStore = create<DataStoreState>((set, get) => ({
 
   applyFilters: (config) => {
     const { entity } = config;
-    // With the generic function, these assignments are now type-safe and correct
     if (entity === 'clients') {
       const filtered = applyFilterLogic(get().originalClients, config);
       set({ clients: filtered });

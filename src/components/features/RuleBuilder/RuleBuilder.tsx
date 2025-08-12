@@ -11,14 +11,13 @@ import {
 } from '@/components/ui/dialog';
 import { CoRunRuleForm } from './CoRunRuleForm';
 import { RuleList } from './RuleList';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'; // Import Tabs
-import { Textarea } from '@/components/ui/textarea'; // Import Textarea
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 import { useDataStore } from '@/store/useDataStore';
 import { BusinessRule } from '@/types';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Lightbulb } from 'lucide-react';
 
-// New component for the AI Rule creation form
 function AiRuleForm({ onRuleCreated }: { onRuleCreated: () => void }) {
   const [text, setText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +41,7 @@ function AiRuleForm({ onRuleCreated }: { onRuleCreated: () => void }) {
         setError(result.error);
       } else {
         addRule(result as BusinessRule);
-        onRuleCreated(); // Close dialog on success
+        onRuleCreated();
       }
     } catch (e: unknown) {
       setError('An unexpected error occurred. Please try again.');
@@ -94,7 +93,6 @@ export function RuleBuilder() {
             <DialogHeader>
               <DialogTitle>Create a New Business Rule</DialogTitle>
             </DialogHeader>
-            {/* Use tabs to switch between manual and AI creation */}
             <Tabs defaultValue="ai" className="w-full">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="ai">✨ Create with AI</TabsTrigger>

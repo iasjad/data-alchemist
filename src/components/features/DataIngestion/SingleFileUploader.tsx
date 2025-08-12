@@ -54,7 +54,7 @@ export function SingleFileUploader({
         '.xlsx',
       ],
     },
-    multiple: false, // Only allow one file at a time
+    multiple: false, 
     disabled: isLoading,
   });
 

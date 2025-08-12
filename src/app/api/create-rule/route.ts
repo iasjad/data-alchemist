@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || 'YOUR_API_KEY_HERE';
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`;
 
-// The system prompt that teaches the AI how to build rules
 const getSystemPrompt = () => `
 You are an expert rule-building assistant for a resource allocation tool. Your job is to convert a user's natural language request into a specific JSON format.
 
@@ -20,7 +19,6 @@ Here are the available rule types and their exact JSON structure:
 4.  If you cannot understand the request or if it doesn't map to a known rule type, you **MUST** respond with this exact JSON error object: { "error": "Could not determine a valid rule from the request." }
 `;
 
-// Helper function to clean the AI's response, just in case
 const cleanAndParseJson = (text: string): object => {
   const startIndex = text.indexOf('{');
   const endIndex = text.lastIndexOf('}');

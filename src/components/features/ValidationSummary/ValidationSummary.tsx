@@ -12,7 +12,6 @@ import {
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react'; // An icon for the alert
 
-// Helper function to flatten all errors from all data entities
 const getAllErrors = (clients: Client[], workers: Worker[], tasks: Task[]) => {
   const allErrors: { entityId: string; type: string; error: FieldError }[] = [];
 
@@ -40,7 +39,6 @@ export function ValidationSummary() {
   const allErrors = getAllErrors(clients, workers, tasks);
 
   if (allErrors.length === 0) {
-    // If there are no errors, show a success message
     return (
       <Alert variant="default" className="mt-8 border-green-500">
         <AlertCircle className="h-4 w-4 !text-green-500" />

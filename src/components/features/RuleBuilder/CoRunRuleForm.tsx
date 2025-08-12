@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { useDataStore } from '@/store/useDataStore';
 import { Button } from '@/components/ui/button';
 import { CoRunRule } from '@/types';
-import { Checkbox } from '@/components/ui/checkbox'; // Add this component via shadcn
-import { Label } from '@/components/ui/label'; // And this one too
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 interface CoRunRuleFormProps {
   onRuleCreated: () => void;
@@ -39,7 +39,7 @@ export function CoRunRuleForm({ onRuleCreated }: CoRunRuleFormProps) {
       tasks: Array.from(selectedTaskIds),
     };
     addRule(newRule);
-    onRuleCreated(); // Close the dialog
+    onRuleCreated();
   };
 
   if (tasks.length === 0) {
