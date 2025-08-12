@@ -46,7 +46,6 @@ export const validateAllData = (
   };
 };
 
-
 function validateClient(
   client: Client,
   taskIds: Set<string>,
@@ -82,7 +81,7 @@ function validateClient(
   ) {
     try {
       JSON.parse(client.attributes);
-    } catch (e) {
+    } catch (_e) {
       errors.push({
         field: 'attributes',
         message: 'Attributes field contains invalid JSON.',

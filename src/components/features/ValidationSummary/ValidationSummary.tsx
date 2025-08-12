@@ -16,18 +16,18 @@ const getAllErrors = (clients: Client[], workers: Worker[], tasks: Task[]) => {
   const allErrors: { entityId: string; type: string; error: FieldError }[] = [];
 
   clients.forEach((c) =>
-    c.errors?.forEach((e) =>
-      allErrors.push({ entityId: c.id, type: 'Client', error: e })
+    c.errors?.forEach((_e) =>
+      allErrors.push({ entityId: c.id, type: 'Client', error: _e })
     )
   );
   workers.forEach((w) =>
-    w.errors?.forEach((e) =>
-      allErrors.push({ entityId: w.id, type: 'Worker', error: e })
+    w.errors?.forEach((_e) =>
+      allErrors.push({ entityId: w.id, type: 'Worker', error: _e })
     )
   );
   tasks.forEach((t) =>
-    t.errors?.forEach((e) =>
-      allErrors.push({ entityId: t.id, type: 'Task', error: e })
+    t.errors?.forEach((_e) =>
+      allErrors.push({ entityId: t.id, type: 'Task', error: _e })
     )
   );
 

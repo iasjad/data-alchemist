@@ -11,7 +11,11 @@ export const getTaskColumns = (): ColumnDef<Task>[] => [
     header: 'Name',
     cell: ({ row, table }) => {
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Task, value: any) => void;
+        updateData: (
+          id: string,
+          field: keyof Task,
+          value: string | number | object
+        ) => void;
       };
       return (
         <EditableCell
@@ -26,7 +30,11 @@ export const getTaskColumns = (): ColumnDef<Task>[] => [
     header: 'Category',
     cell: ({ row, table }) => {
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Task, value: any) => void;
+        updateData: (
+          id: string,
+          field: keyof Task,
+          value: string | number | object
+        ) => void;
       };
       return (
         <EditableCell
@@ -41,10 +49,14 @@ export const getTaskColumns = (): ColumnDef<Task>[] => [
     header: 'Duration',
     cell: ({ row, table }) => {
       const error = row.original.errors?.find(
-        (e) => e.field === 'duration'
+        (_e) => _e.field === 'duration'
       )?.message;
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Task, value: any) => void;
+        updateData: (
+          id: string,
+          field: keyof Task,
+          value: string | number | object
+        ) => void;
       };
       return (
         <EditableCell
@@ -62,7 +74,7 @@ export const getTaskColumns = (): ColumnDef<Task>[] => [
     header: 'Required Skills',
     cell: ({ row }) => {
       const error = row.original.errors?.find(
-        (e) => e.field === 'requiredSkills'
+        (_e) => _e.field === 'requiredSkills'
       )?.message;
       return (
         <div className="flex flex-wrap gap-1" title={error}>

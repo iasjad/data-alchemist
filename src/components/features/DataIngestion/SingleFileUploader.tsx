@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { CheckCircle2, FileUp, UploadCloud, XCircle } from 'lucide-react';
+import { CheckCircle2, FileUp, UploadCloud } from 'lucide-react';
 
 interface SingleFileUploaderProps {
   title: string;
@@ -54,7 +54,7 @@ export function SingleFileUploader({
         '.xlsx',
       ],
     },
-    multiple: false, 
+    multiple: false,
     disabled: isLoading,
   });
 

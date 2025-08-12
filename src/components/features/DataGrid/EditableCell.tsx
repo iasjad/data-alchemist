@@ -39,7 +39,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   const inputElement = isTextArea ? (
     <Textarea
       value={value as string}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(_e) => setValue(_e.target.value)}
       onBlur={handleBlur}
       className={cn('w-full min-h-[80px]', {
         'border-red-500 focus-visible:ring-red-500': error,
@@ -48,7 +48,7 @@ export const EditableCell: React.FC<EditableCellProps> = ({
   ) : (
     <Input
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(_e) => setValue(_e.target.value)}
       onBlur={handleBlur}
       className={cn('w-full h-8', {
         'border-red-500 focus-visible:ring-red-500': error,

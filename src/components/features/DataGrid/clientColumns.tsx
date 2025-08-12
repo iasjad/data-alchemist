@@ -9,7 +9,9 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
     accessorKey: 'id',
     header: 'Client ID',
     cell: ({ row }) => {
-      const error = row.original.errors?.find((e) => e.field === 'id')?.message;
+      const error = row.original.errors?.find(
+        (_e) => _e.field === 'id'
+      )?.message;
       return (
         <div className={error ? 'text-red-500' : ''} title={error}>
           {row.getValue('id')}
@@ -22,7 +24,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
     header: 'Name',
     cell: ({ row, table }) => {
       const error = row.original.errors?.find(
-        (e) => e.field === 'name'
+        (_e) => _e.field === 'name'
       )?.message;
       const { updateData } = table.options.meta as {
         updateData: (id: string, field: keyof Client, value: unknown) => void;
@@ -41,7 +43,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
     header: 'Priority',
     cell: ({ row, table }) => {
       const error = row.original.errors?.find(
-        (e) => e.field === 'priorityLevel'
+        (_e) => _e.field === 'priorityLevel'
       )?.message;
       const { updateData } = table.options.meta as {
         updateData: (id: string, field: keyof Client, value: unknown) => void;
@@ -62,7 +64,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
     header: 'Group Tag',
     cell: ({ row, table }) => {
       const error = row.original.errors?.find(
-        (e) => e.field === 'groupTag'
+        (_e) => _e.field === 'groupTag'
       )?.message;
       const { updateData } = table.options.meta as {
         updateData: (id: string, field: keyof Client, value: unknown) => void;
@@ -82,7 +84,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
     cell: ({ row }) => {
       const tasks = row.getValue('requestedTaskIds') as string[];
       const error = row.original.errors?.find(
-        (e) => e.field === 'requestedTaskIds'
+        (_e) => _e.field === 'requestedTaskIds'
       )?.message;
       return (
         <div className="flex flex-wrap gap-1" title={error}>
@@ -101,7 +103,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
     cell: ({ row, table }) => {
       const attributes = row.original.attributes;
       const error = row.original.errors?.find(
-        (e) => e.field === 'attributes'
+        (_e) => _e.field === 'attributes'
       )?.message;
       const displayValue =
         typeof attributes === 'object'

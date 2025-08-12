@@ -63,7 +63,7 @@ function AiRuleForm({ onRuleCreated }: { onRuleCreated: () => void }) {
       <Textarea
         placeholder="Enter rule in plain English..."
         value={text}
-        onChange={(e) => setText(e.target.value)}
+        onChange={(_e) => setText(_e.target.value)}
         disabled={isLoading}
       />
       {error && <p className="text-sm text-red-500">{error}</p>}

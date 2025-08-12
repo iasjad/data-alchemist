@@ -38,7 +38,9 @@ function applyFilterLogic<T extends Client | Worker | Task>(
 ): T[] {
   return data.filter((item) => {
     return config.filters.every((filter) => {
-      const itemValue = (item as Record<string, any>)[filter.field];
+      const itemValue = (item as unknown as Record<string, string | number | object>)[
+        filter.field
+      ];
       switch (filter.operator) {
         case 'equals':
           return itemValue === filter.value;

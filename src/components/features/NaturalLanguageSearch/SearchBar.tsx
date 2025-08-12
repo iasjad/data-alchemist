@@ -39,8 +39,8 @@ export function SearchBar() {
         type="text"
         placeholder="e.g., show workers with analysis skill and level 4..."
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+        onChange={(_e) => setQuery(_e.target.value)}
+        onKeyDown={(_e) => _e.key === 'Enter' && handleSearch()}
         disabled={isLoading}
       />
       <Button onClick={handleSearch} disabled={isLoading}>

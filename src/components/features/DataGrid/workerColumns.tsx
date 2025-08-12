@@ -11,7 +11,11 @@ export const getWorkerColumns = (): ColumnDef<Worker>[] => [
     header: 'Name',
     cell: ({ row, table }) => {
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Worker, value: any) => void;
+        updateData: (
+          id: string,
+          field: keyof Worker,
+          value: string | number | object
+        ) => void;
       };
       return (
         <EditableCell
@@ -39,7 +43,11 @@ export const getWorkerColumns = (): ColumnDef<Worker>[] => [
     header: 'Level',
     cell: ({ row, table }) => {
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Worker, value: any) => void;
+        updateData: (
+          id: string,
+          field: keyof Worker,
+          value: string | number | object
+        ) => void;
       };
       return (
         <EditableCell
