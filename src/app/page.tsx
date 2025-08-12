@@ -22,6 +22,7 @@ function DataTablesDisplay() {
   const workerColumns = getWorkerColumns();
   const taskColumns = getTaskColumns();
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateClient = useCallback(
     (id: string, field: keyof Client, value: any) => {
       const updated = clients.map((c) =>
@@ -32,6 +33,7 @@ function DataTablesDisplay() {
     [clients, workers, tasks, updateAndValidateData]
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateWorker = useCallback(
     (id: string, field: keyof Worker, value: any) => {
       const updated = workers.map((w) =>
@@ -42,6 +44,7 @@ function DataTablesDisplay() {
     [clients, workers, tasks, updateAndValidateData]
   );
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const updateTask = useCallback(
     (id: string, field: keyof Task, value: any) => {
       const updated = tasks.map((t) =>

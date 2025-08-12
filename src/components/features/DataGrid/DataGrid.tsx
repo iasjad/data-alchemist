@@ -19,7 +19,7 @@ import {
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  meta?: any;
+  meta?: Record<string, unknown>;
 }
 
 export function DataGrid<TData, TValue>({

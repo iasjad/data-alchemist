@@ -25,7 +25,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
         (e) => e.field === 'name'
       )?.message;
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Client, value: any) => void;
+        updateData: (id: string, field: keyof Client, value: unknown) => void;
       };
       return (
         <EditableCell
@@ -44,7 +44,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
         (e) => e.field === 'priorityLevel'
       )?.message;
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Client, value: any) => void;
+        updateData: (id: string, field: keyof Client, value: unknown) => void;
       };
       return (
         <EditableCell
@@ -65,7 +65,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
         (e) => e.field === 'groupTag'
       )?.message;
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Client, value: any) => void;
+        updateData: (id: string, field: keyof Client, value: unknown) => void;
       };
       return (
         <EditableCell
@@ -108,7 +108,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
           ? JSON.stringify(attributes)
           : String(attributes);
       const { updateData } = table.options.meta as {
-        updateData: (id: string, field: keyof Client, value: any) => void;
+        updateData: (id: string, field: keyof Client, value: unknown) => void;
       };
       return (
         <EditableCell
