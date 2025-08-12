@@ -10,7 +10,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react'; // An icon for the alert
+import { AlertCircle } from 'lucide-react';
 
 const getAllErrors = (clients: Client[], workers: Worker[], tasks: Task[]) => {
   const allErrors: { entityId: string; type: string; error: FieldError }[] = [];
