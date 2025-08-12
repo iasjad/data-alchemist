@@ -6,7 +6,8 @@ An intelligent web application designed to transform chaotic spreadsheet data in
 
 ## 🚀 Live Demo
 
-## TBA
+**Live Demo:** [https://data-alchemist-sand.vercel.app/](https://data-alchemist-sand.vercel.app/)
+
 
 ## ✨ Core Features
 
