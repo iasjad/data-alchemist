@@ -1,4 +1,5 @@
 'use client';
+
 import React, { useCallback } from 'react';
 import { useDataStore } from '@/store/useDataStore';
 import { DataGrid } from '@/components/features/DataGrid/DataGrid';
@@ -12,7 +13,7 @@ import { RuleBuilder } from '@/components/features/RuleBuilder/RuleBuilder';
 import { Prioritization } from '@/components/features/Prioritization/Prioritization';
 import { Export } from '@/components/features/Export/Export';
 import { DataIngestionController } from '@/components/features/DataIngestion/DataIngestionController';
-import { Client, Task, Worker } from '@/types'; // <-- Added missing 'Worker' import
+import { Client, Task, Worker } from '@/types';
 
 function DataTablesDisplay() {
   const { clients, workers, tasks, updateAndValidateData } = useDataStore();
@@ -26,9 +27,9 @@ function DataTablesDisplay() {
       const updated = clients.map((c) =>
         c.id === id ? { ...c, [field]: value } : c
       );
-      updateAndValidateData({ clients: updated });
+      updateAndValidateData({ clients: updated, workers, tasks });
     },
-    [clients, updateAndValidateData]
+    [clients, workers, tasks, updateAndValidateData]
   );
 
   const updateWorker = useCallback(
@@ -36,9 +37,9 @@ function DataTablesDisplay() {
       const updated = workers.map((w) =>
         w.id === id ? { ...w, [field]: value } : w
       );
-      updateAndValidateData({ workers: updated });
+      updateAndValidateData({ clients, workers: updated, tasks });
     },
-    [workers, updateAndValidateData]
+    [clients, workers, tasks, updateAndValidateData]
   );
 
   const updateTask = useCallback(
@@ -46,15 +47,12 @@ function DataTablesDisplay() {
       const updated = tasks.map((t) =>
         t.id === id ? { ...t, [field]: value } : t
       );
-      updateAndValidateData({ tasks: updated });
+      updateAndValidateData({ clients, workers, tasks: updated });
     },
-    [tasks, updateAndValidateData]
+    [clients, workers, tasks, updateAndValidateData]
   );
 
-  const hasLoadedData =
-    clients.length > 0 || workers.length > 0 || tasks.length > 0;
-
-  if (!hasLoadedData) {
+  if (!clients.length && !workers.length && !tasks.length) {
     return (
       <div className="text-center mt-12 text-muted-foreground">
         <p>Your data tables will appear here once files are uploaded.</p>
@@ -124,11 +122,9 @@ export default function Home() {
           Data Alchemist 🔮
         </h1>
       </div>
-
       <div className="w-full">
         <DataIngestionController />
       </div>
-
       {hasData && (
         <>
           <SearchBar />

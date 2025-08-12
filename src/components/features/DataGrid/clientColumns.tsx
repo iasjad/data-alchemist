@@ -8,7 +8,14 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
   {
     accessorKey: 'id',
     header: 'Client ID',
-    cell: ({ row }) => {},
+    cell: ({ row }) => {
+      const error = row.original.errors?.find((e) => e.field === 'id')?.message;
+      return (
+        <div className={error ? 'text-red-500' : ''} title={error}>
+          {row.getValue('id')}
+        </div>
+      );
+    },
   },
   {
     accessorKey: 'name',
@@ -99,7 +106,7 @@ export const getClientColumns = (): ColumnDef<Client>[] => [
       const displayValue =
         typeof attributes === 'object'
           ? JSON.stringify(attributes)
-          : attributes;
+          : String(attributes);
       const { updateData } = table.options.meta as {
         updateData: (id: string, field: keyof Client, value: any) => void;
       };

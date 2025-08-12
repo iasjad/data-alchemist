@@ -56,7 +56,8 @@ function AiRuleForm({ onRuleCreated }: { onRuleCreated: () => void }) {
         <Lightbulb className="h-4 w-4" />
         <AlertTitle>Describe the Rule!</AlertTitle>
         <AlertDescription>
-          Try something like: "Tasks T1, T5, and T8 must run together".
+          Try something like: &quot;Tasks T1, T5, and T8 must run
+          together&quot;.
         </AlertDescription>
       </Alert>
       <Textarea
