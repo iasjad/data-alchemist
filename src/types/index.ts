@@ -15,7 +15,7 @@ export interface Client {
   priorityLevel: number;
   requestedTaskIds: string[];
   groupTag: string;
-  attributes: Record<string, any> | string; // Can be a parsed JSON object or the raw string if invalid
+  attributes: Record<string, unknown> | string;
   errors?: FieldError[]; // An array of validation errors for this client
 }
 
@@ -47,14 +47,25 @@ export interface Task {
   errors?: FieldError[]; // An array of validation errors for this task
 }
 
-export interface CoRunRule {
-  type: 'coRun';
-  tasks: string[]; // An array of TaskIDs that must run together
-}
-
 /**
  * A union type to represent any of the data entities we handle.
  */
 export type DataEntity = Client | Worker | Task;
 
+// --- Rule & Priority Types ---
+
+export interface CoRunRule {
+  type: 'coRun';
+  tasks: string[]; // An array of TaskIDs that must run together
+}
+
 export type BusinessRule = CoRunRule;
+
+/**
+ * NEW: Defines the structure for the prioritization settings from the sliders.
+ */
+export interface PrioritySettings {
+  fulfillHighestPriority: number;
+  taskCompletion: number;
+  fairness: number;
+}

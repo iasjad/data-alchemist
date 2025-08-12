@@ -6,7 +6,6 @@ import { EditableCell } from './EditableCell';
 import { useDataStore } from '@/store/useDataStore';
 import { Badge } from '@/components/ui/badge';
 
-// This hook encapsulates the logic for updating client data in the global store
 const useUpdateClient = () => {
   const { clients, workers, tasks, updateAndValidateData } = useDataStore();
 
@@ -14,15 +13,12 @@ const useUpdateClient = () => {
     const updatedClients = clients.map((c) =>
       c.id === clientId ? { ...c, [field]: value } : c
     );
-    // Call the new centralized function
     updateAndValidateData({ clients: updatedClients, workers, tasks });
   };
   return updateClient;
 };
 
-// Function to generate the column definitions for the client data grid
 export const getClientColumns = (): ColumnDef<Client>[] => {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const updateClient = useUpdateClient();
 
   return [

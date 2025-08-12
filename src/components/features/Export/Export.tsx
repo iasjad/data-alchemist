@@ -10,12 +10,12 @@ import { Download } from 'lucide-react';
  * This function correctly handles complex data (arrays, objects) and
  * special characters by properly quoting and escaping them.
  */
-function toCSV(data: any[]): string {
+function toCSV(data: Record<string, unknown>[]): string {
   if (data.length === 0) return '';
 
   const headers = Object.keys(data[0]);
 
-  const formatCell = (value: any): string => {
+  const formatCell = (value: unknown): string => {
     if (value == null) {
       // Handles null and undefined
       return '';

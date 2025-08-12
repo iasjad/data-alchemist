@@ -6,14 +6,13 @@ import { EditableCell } from './EditableCell';
 import { useDataStore } from '@/store/useDataStore';
 import { Badge } from '@/components/ui/badge';
 
-// This hook encapsulates the logic for updating worker data in the global store
 const useUpdateWorker = () => {
   const { clients, workers, tasks, updateAndValidateData } = useDataStore();
+
   const updateWorker = (workerId: string, field: keyof Worker, value: any) => {
     const updatedWorkers = workers.map((w) =>
       w.id === workerId ? { ...w, [field]: value } : w
     );
-    // Call the new centralized function
     updateAndValidateData({ clients, workers: updatedWorkers, tasks });
   };
   return updateWorker;

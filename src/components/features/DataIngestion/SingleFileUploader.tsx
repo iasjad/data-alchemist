@@ -33,8 +33,12 @@ export function SingleFileUploader({
       setError(null);
       try {
         await onFileUpload(file, dataType);
-      } catch (e: any) {
-        setError(e.message || 'Failed to process file.');
+      } catch (e: unknown) {
+        if (e instanceof Error) {
+          setError(e.message);
+        } else {
+          setError('An unknown error occurred.');
+        }
       } finally {
         setIsLoading(false);
       }

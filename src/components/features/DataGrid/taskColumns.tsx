@@ -6,14 +6,13 @@ import { EditableCell } from './EditableCell';
 import { useDataStore } from '@/store/useDataStore';
 import { Badge } from '@/components/ui/badge';
 
-// This hook encapsulates the logic for updating task data in the global store
 const useUpdateTask = () => {
   const { clients, workers, tasks, updateAndValidateData } = useDataStore();
+
   const updateTask = (taskId: string, field: keyof Task, value: any) => {
     const updatedTasks = tasks.map((t) =>
       t.id === taskId ? { ...t, [field]: value } : t
     );
-    // Call the new centralized function
     updateAndValidateData({ clients, workers, tasks: updatedTasks });
   };
   return updateTask;

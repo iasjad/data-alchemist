@@ -44,7 +44,7 @@ function AiRuleForm({ onRuleCreated }: { onRuleCreated: () => void }) {
         addRule(result as BusinessRule);
         onRuleCreated(); // Close dialog on success
       }
-    } catch (e) {
+    } catch (e: unknown) {
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);

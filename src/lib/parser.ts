@@ -1,9 +1,8 @@
 import * as XLSX from 'xlsx';
 import { Client, Worker, Task } from '@/types';
 
-// No changes are needed for the helper functions below this line
-// parsePhases, getDataTypeFromSheetName, transformRow
-function parsePhases(input: any): number[] {
+// This helper function remains the same.
+function parsePhases(input: unknown): number[] {
   const strInput = String(input).trim();
   if (strInput.startsWith('[') && strInput.endsWith(']')) {
     try {
@@ -26,6 +25,7 @@ function parsePhases(input: any): number[] {
   return [];
 }
 
+// This helper function remains the same.
 const getDataTypeFromSheetName = (
   name: string
 ): 'clients' | 'workers' | 'tasks' | null => {
@@ -36,27 +36,34 @@ const getDataTypeFromSheetName = (
   return null;
 };
 
+// This helper function is now more type-safe.
 export function transformRow(
-  row: any,
+  row: Record<string, unknown>,
   dataType: 'clients' | 'workers' | 'tasks'
 ): Partial<Client | Worker | Task> {
-  const transformed: any = {};
-  transformed.id =
+  // Use a Partial type for better type safety instead of 'any'
+  const transformed: Partial<Client & Worker & Task> = {};
+
+  transformed.id = String(
     row.ClientID ||
-    row['Client ID'] ||
-    row.WorkerID ||
-    row['Worker ID'] ||
-    row.TaskID ||
-    row['Task ID'] ||
-    row.id;
-  transformed.name =
+      row['Client ID'] ||
+      row.WorkerID ||
+      row['Worker ID'] ||
+      row.TaskID ||
+      row['Task ID'] ||
+      row.id ||
+      ''
+  );
+  transformed.name = String(
     row.ClientName ||
-    row['Client Name'] ||
-    row.WorkerName ||
-    row['Worker Name'] ||
-    row.TaskName ||
-    row['Task Name'] ||
-    row.name;
+      row['Client Name'] ||
+      row.WorkerName ||
+      row['Worker Name'] ||
+      row.TaskName ||
+      row['Task Name'] ||
+      row.name ||
+      ''
+  );
 
   if (dataType === 'clients') {
     if (row.PriorityLevel != null)
@@ -65,12 +72,13 @@ export function transformRow(
       transformed.requestedTaskIds = String(row.RequestedTaskIDs)
         .split(',')
         .map((s) => s.trim());
-    if (row.GroupTag) transformed.groupTag = row.GroupTag;
+    if (row.GroupTag) transformed.groupTag = String(row.GroupTag);
     if (row.AttributesJSON) {
       try {
-        transformed.attributes = JSON.parse(row.AttributesJSON);
+        // FIX: Ensure the value passed to JSON.parse is a string.
+        transformed.attributes = JSON.parse(String(row.AttributesJSON));
       } catch {
-        transformed.attributes = row.AttributesJSON;
+        transformed.attributes = String(row.AttributesJSON);
       }
     }
   } else if (dataType === 'workers') {
@@ -82,11 +90,11 @@ export function transformRow(
       transformed.availableSlots = parsePhases(row.AvailableSlots);
     if (row.MaxLoadPerPhase != null)
       transformed.maxLoadPerPhase = Number(row.MaxLoadPerPhase);
-    if (row.WorkerGroup) transformed.workerGroup = row.WorkerGroup;
+    if (row.WorkerGroup) transformed.workerGroup = String(row.WorkerGroup);
     if (row.QualificationLevel != null)
       transformed.qualificationLevel = Number(row.QualificationLevel);
   } else if (dataType === 'tasks') {
-    if (row.Category) transformed.category = row.Category;
+    if (row.Category) transformed.category = String(row.Category);
     if (row.Duration != null) transformed.duration = Number(row.Duration);
     if (row.RequiredSkills)
       transformed.requiredSkills = String(row.RequiredSkills)
@@ -100,11 +108,9 @@ export function transformRow(
   return transformed;
 }
 
-/**
- * NEW: A dedicated parser for single CSV or single-sheet files.
- * It simply parses the first sheet it finds without guessing the data type.
- */
-export function parseSingleFile(file: File): Promise<any[]> {
+export function parseSingleFile(
+  file: File
+): Promise<Record<string, unknown>[]> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onload = (event) => {
@@ -116,7 +122,11 @@ export function parseSingleFile(file: File): Promise<any[]> {
         if (!firstSheetName)
           return reject(new Error('No sheets found in file.'));
         const worksheet = workbook.Sheets[firstSheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        // FIX: Assert the type of the parsed JSON data.
+        const jsonData = XLSX.utils.sheet_to_json(worksheet) as Record<
+          string,
+          unknown
+        >[];
         resolve(jsonData);
       } catch (error) {
         reject(error);
@@ -127,9 +137,6 @@ export function parseSingleFile(file: File): Promise<any[]> {
   });
 }
 
-/**
- * This function is now used ONLY for the 'All-in-One' upload.
- */
 export function parseWorkbook(
   file: File
 ): Promise<{ clients: Client[]; workers: Worker[]; tasks: Task[] }> {
@@ -143,11 +150,16 @@ export function parseWorkbook(
         let clients: Client[] = [],
           workers: Worker[] = [],
           tasks: Task[] = [];
+
         workbook.SheetNames.forEach((sheetName) => {
           const dataType = getDataTypeFromSheetName(sheetName);
           if (!dataType) return;
           const worksheet = workbook.Sheets[sheetName];
-          const jsonData = XLSX.utils.sheet_to_json(worksheet);
+          // FIX: Assert the type here as well. This fixes the error in the .map() call.
+          const jsonData = XLSX.utils.sheet_to_json(worksheet) as Record<
+            string,
+            unknown
+          >[];
           const cleanedData = jsonData
             .map((row) => transformRow(row, dataType))
             .filter((obj) => obj && obj.id);

@@ -1,24 +1,18 @@
 import { create } from 'zustand';
-import { Client, Worker, Task, BusinessRule, CoRunRule } from '@/types'; // <-- Add BusinessRule types
+import { Client, Worker, Task, BusinessRule, PrioritySettings } from '@/types';
 import { validateAllData } from '@/lib/validator';
 
-export interface PrioritySettings {
-  fulfillHighestPriority: number; // Weight for client priority level
-  taskCompletion: number; // Weight for completing as many tasks as possible
-  fairness: number; // Weight for distributing work evenly
-}
-
-// The shape of the AI-generated filter config
+// The FilterConfig interface remains the same
 interface FilterConfig {
   entity: 'clients' | 'workers' | 'tasks';
   filters: {
     field: string;
     operator: 'equals' | 'contains' | 'greater_than' | 'less_than';
-    value: any;
+    value: string | number; // Corrected from 'any' for better type safety
   }[];
 }
 
-// The new shape of our store's state
+// The DataStoreState interface is updated to remove the old setters
 interface DataStoreState {
   originalClients: Client[];
   originalWorkers: Worker[];
@@ -28,25 +22,29 @@ interface DataStoreState {
   tasks: Task[];
   rules: BusinessRule[];
   priorities: PrioritySettings;
-
-  // This will become our primary way to change data
   updateAndValidateData: (data: {
     clients?: Client[];
     workers?: Worker[];
     tasks?: Task[];
   }) => void;
-
-  applyFilters: (config: any) => void; // Keep for search
+  applyFilters: (config: FilterConfig) => void;
   addRule: (rule: BusinessRule) => void;
   removeRule: (ruleIndex: number) => void;
   setPriorities: (newPriorities: Partial<PrioritySettings>) => void;
 }
 
-// Generic filtering utility
-const applyFilterLogic = (data: any[], config: FilterConfig) => {
+/**
+ * UPDATED: The filtering utility is now a generic function.
+ * This preserves the type information of the array being filtered.
+ */
+function applyFilterLogic<T extends Client | Worker | Task>(
+  data: T[],
+  config: FilterConfig
+): T[] {
   return data.filter((item) => {
     return config.filters.every((filter) => {
-      const itemValue = item[filter.field];
+      // Use a type assertion here for dynamic property access
+      const itemValue = (item as Record<string, any>)[filter.field];
       switch (filter.operator) {
         case 'equals':
           return itemValue === filter.value;
@@ -61,7 +59,7 @@ const applyFilterLogic = (data: any[], config: FilterConfig) => {
       }
     });
   });
-};
+}
 
 export const useDataStore = create<DataStoreState>((set, get) => ({
   originalClients: [],
@@ -70,29 +68,21 @@ export const useDataStore = create<DataStoreState>((set, get) => ({
   clients: [],
   workers: [],
   tasks: [],
+  rules: [],
   priorities: { fulfillHighestPriority: 70, taskCompletion: 80, fairness: 50 },
 
-  setClients: (clients: any) => set({ clients, originalClients: clients }),
-  setWorkers: (workers: any) => set({ workers, originalWorkers: workers }),
-  setTasks: (tasks: any) => set({ tasks, originalTasks: tasks }),
   updateAndValidateData: (newData) => {
     const currentState = get();
-
-    // Merge new data with current state
     const mergedData = {
       clients: newData.clients ?? currentState.originalClients,
       workers: newData.workers ?? currentState.originalWorkers,
       tasks: newData.tasks ?? currentState.originalTasks,
     };
-
-    // Run validation on the entire, updated dataset
     const validated = validateAllData(
       mergedData.clients,
       mergedData.workers,
       mergedData.tasks
     );
-
-    // Set the state
     set({
       originalClients: validated.clients,
       originalWorkers: validated.workers,
@@ -105,6 +95,7 @@ export const useDataStore = create<DataStoreState>((set, get) => ({
 
   applyFilters: (config) => {
     const { entity } = config;
+    // With the generic function, these assignments are now type-safe and correct
     if (entity === 'clients') {
       const filtered = applyFilterLogic(get().originalClients, config);
       set({ clients: filtered });
@@ -118,7 +109,7 @@ export const useDataStore = create<DataStoreState>((set, get) => ({
       set({ tasks: filtered });
     }
   },
-  rules: [],
+
   addRule: (rule) => set((state) => ({ rules: [...state.rules, rule] })),
   removeRule: (ruleIndex) =>
     set((state) => ({
