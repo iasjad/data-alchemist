@@ -69,7 +69,7 @@ function DataTablesDisplay() {
             <CardHeader>
               <CardTitle>Clients Data</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="max-h-[60vh] overflow-y-auto">
               <DataGrid
                 columns={clientColumns}
                 data={clients}
@@ -83,7 +83,7 @@ function DataTablesDisplay() {
             <CardHeader>
               <CardTitle>Workers Data</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="max-h-[60vh] overflow-y-auto">
               <DataGrid
                 columns={workerColumns}
                 data={workers}
@@ -97,7 +97,7 @@ function DataTablesDisplay() {
             <CardHeader>
               <CardTitle>Tasks Data</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="max-h-[60vh] overflow-y-auto">
               <DataGrid
                 columns={taskColumns}
                 data={tasks}
